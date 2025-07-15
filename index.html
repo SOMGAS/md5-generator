@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>MD5 Signature Generator</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    input, button, textarea { margin: 10px 0; width: 100%; padding: 10px; font-size: 1em; }
+    textarea { height: 50px; }
+  </style>
+</head>
+<body>
+  <h2>MD5 Signature Generator</h2>
+
+  <label>Timestamp</label>
+  <input type="text" id="timestamp" placeholder="e.g., 20250714T101530">
+
+  <label>Secret Password</label>
+  <input type="text" id="secret_password" placeholder="e.g., mysecret123">
+
+  <label>Partner Code</label>
+  <input type="text" id="partner_code" placeholder="e.g., PARTNER001">
+
+  <button onclick="generateSignature()">Generate MD5</button>
+
+  <label>MD5 Hash:</label>
+  <textarea id="result" readonly></textarea>
+
+  <script>
+    function pad(n) {
+      return n < 10 ? '0' + n : n;
+    }
+
+    function getCurrentTimestamp() {
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = pad(now.getMonth() + 1);
+      const day = pad(now.getDate());
+      const hour = pad(now.getHours());
+      const minute = pad(now.getMinutes());
+      const second = pad(now.getSeconds());
+      return `${year}${month}${day}T${hour}${minute}${second}`;
+    }
+
+    // Auto-fill the timestamp field
+    document.addEventListener("DOMContentLoaded", function() {
+      document.getElementById("timestamp").value = getCurrentTimestamp();
+    });
+
+    function generateSignature() {
+      const timestamp = document.getElementById("timestamp").value;
+      const secretPassword = document.getElementById("secret_password").value;
+      const partnerCode = document.getElementById("partner_code").value;
+
+      const rawString = timestamp + secretPassword + partnerCode;
+      const hash = CryptoJS.MD5(rawString).toString();
+
+      document.getElementById("result").value = hash;
+    }
+  </script>
+</body>
+</html>
